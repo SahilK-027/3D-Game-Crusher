@@ -1,6 +1,6 @@
 import { RigidBody } from '@react-three/rapier';
 import * as THREE from 'three'
-import { useState, useRef } from 'react';
+import { useState, useRef , useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 
@@ -17,7 +17,7 @@ const wallMaterial = new THREE.MeshStandardMaterial({ color: 'slategrey' })
  * @param {*} param0 
  * @returns Newly created Box geometry for start ground
  */
-function BlockStart({ positionProp = [0, 0, 0] }) {
+export function BlockStart({ positionProp = [0, 0, 0] }) {
     return (
         <group position={positionProp}>
             <mesh
@@ -35,7 +35,7 @@ function BlockStart({ positionProp = [0, 0, 0] }) {
  * @param {*} param0 
  * @returns Newly created Box geometry for 2nd block with spinning trap
  */
-function BlockSpinner({ positionProp = [0, 0, 0] }) {
+export function BlockSpinner({ positionProp = [0, 0, 0] }) {
     const obstacle = useRef();
     const [speed] = useState(() => (Math.random() + 0.2) * (Math.random() < 0.5 ? -1 : 1))
     useFrame((state) => {
@@ -79,7 +79,7 @@ function BlockSpinner({ positionProp = [0, 0, 0] }) {
  * @param {*} param0 
  * @returns Newly created Box geometry for 2nd block with wll trap moving up and down
  */
-function BlockVerticle({ positionProp = [0, 0, 0] }) {
+export function BlockVerticle({ positionProp = [0, 0, 0] }) {
     const obstacle = useRef();
     const [timeOffset] = useState(() => Math.random() * Math.PI * 2)
 
@@ -123,7 +123,7 @@ function BlockVerticle({ positionProp = [0, 0, 0] }) {
  * @param {*} param0 
  * @returns Newly created Box geometry for 2nd block with wll trap moving left and right
  */
-function BlockAxe({ positionProp = [0, 0, 0] }) {
+export function BlockAxe({ positionProp = [0, 0, 0] }) {
     const obstacle = useRef();
     const [timeOffset] = useState(() => Math.random() * Math.PI * 2)
 
@@ -167,7 +167,7 @@ function BlockAxe({ positionProp = [0, 0, 0] }) {
  * @param {*} param0 
  * @returns Newly created Box geometry for end ground
  */
-function BlockEnd({ positionProp = [0, 0, 0] }) {
+export function BlockEnd({ positionProp = [0, 0, 0] }) {
     const pin1 = useGLTF('./bowlingPin.glb');
     const pin2 = useGLTF('./bowlingPin2.glb');
     const pin3 = useGLTF('./bowlingPin3.glb');
@@ -233,12 +233,18 @@ function BlockEnd({ positionProp = [0, 0, 0] }) {
     );
 }
 
-export default function Level() {
+export function Level({count = 5, types = [BlockSpinner, BlockVerticle, BlockAxe]}) {
+    const blocks = useMemo(()=>{
+        const blocks = [];
+        for(let i = 0; i < count ;i++){
+            const type = types[ Math.floor(Math.random() * types.length)];
+            blocks.push(type);
+        }
+        return blocks;
+    }, [count, types])
     return <>
-        <BlockStart positionProp={[0, 0, 16]} />
-        <BlockSpinner positionProp={[0, 0, 12]} />
-        <BlockVerticle positionProp={[0, 0, 8]} />
-        <BlockAxe positionProp={[0, 0, 4]} />
-        <BlockEnd positionProp={[0, 0, 0]} />
+        <BlockStart positionProp={[0, 0, 0]} />
+        { blocks.map((Block, index) => <Block key={ index } positionProp={ [ 0, 0, - (index + 1) * 4 ] } />) }
+        <BlockEnd positionProp={[0, 0, -(count+1)*4]} />
     </>
 }
