@@ -1,6 +1,6 @@
-import { RigidBody } from '@react-three/rapier';
+import { CuboidCollider, RigidBody } from '@react-three/rapier';
 import * as THREE from 'three'
-import { useState, useRef , useMemo } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 
@@ -174,22 +174,22 @@ export function BlockEnd({ positionProp = [0, 0, 0] }) {
     const pin4 = useGLTF('./bowlingPin4.glb');
     const pin5 = useGLTF('./bowlingPin5.glb');
     const pin6 = useGLTF('./bowlingPin6.glb');
-    pin1.scene.children.forEach((mesh)=>{
+    pin1.scene.children.forEach((mesh) => {
         mesh.castShadow = true;
     })
-    pin2.scene.children.forEach((mesh)=>{
+    pin2.scene.children.forEach((mesh) => {
         mesh.castShadow = true;
     })
-    pin3.scene.children.forEach((mesh)=>{
+    pin3.scene.children.forEach((mesh) => {
         mesh.castShadow = true;
     })
-    pin4.scene.children.forEach((mesh)=>{
+    pin4.scene.children.forEach((mesh) => {
         mesh.castShadow = true;
     })
-    pin5.scene.children.forEach((mesh)=>{
+    pin5.scene.children.forEach((mesh) => {
         mesh.castShadow = true;
     })
-    pin6.scene.children.forEach((mesh)=>{
+    pin6.scene.children.forEach((mesh) => {
         mesh.castShadow = true;
     })
 
@@ -233,18 +233,53 @@ export function BlockEnd({ positionProp = [0, 0, 0] }) {
     );
 }
 
-export function Level({count = 5, types = [BlockSpinner, BlockVerticle, BlockAxe]}) {
-    const blocks = useMemo(()=>{
+function Bounds({ length = 1 }) {
+    return <>
+        <RigidBody type='fixed' friction={0} restitution={0.2}>
+            <mesh
+                position={[2.15, 0.55, - (length * 2) + 2]}
+                geometry={boxGeometry}
+                material={wallMaterial}
+                scale={[0.3, 1.5, 4 * length]}
+                castShadow
+            />
+            <mesh
+                position={[-2.15, 0.55, - (length * 2) + 2]}
+                geometry={boxGeometry}
+                material={wallMaterial}
+                scale={[0.3, 1.5, 4 * length]}
+                receiveShadow
+            />
+            <mesh
+                position={[0, 0.55, - (length * 4) + 2.151]}
+                geometry={boxGeometry}
+                material={wallMaterial}
+                scale={[4, 1.5, 0.3]}
+                receiveShadow
+            />
+            <CuboidCollider
+                args={[2, 0.1, 2 * length]}
+                position={[0, -0.1, - (length * 2) + 2]}
+                restitution={0.2}
+                friction={1}
+            />
+        </RigidBody>
+    </>
+}
+
+export function Level({ count = 5, types = [BlockSpinner, BlockVerticle, BlockAxe] }) {
+    const blocks = useMemo(() => {
         const blocks = [];
-        for(let i = 0; i < count ;i++){
-            const type = types[ Math.floor(Math.random() * types.length)];
+        for (let i = 0; i < count; i++) {
+            const type = types[Math.floor(Math.random() * types.length)];
             blocks.push(type);
         }
         return blocks;
     }, [count, types])
     return <>
         <BlockStart positionProp={[0, 0, 0]} />
-        { blocks.map((Block, index) => <Block key={ index } positionProp={ [ 0, 0, - (index + 1) * 4 ] } />) }
-        <BlockEnd positionProp={[0, 0, -(count+1)*4]} />
+        {blocks.map((Block, index) => <Block key={index} positionProp={[0, 0, - (index + 1) * 4]} />)}
+        <BlockEnd positionProp={[0, 0, -(count + 1) * 4]} />
+        <Bounds length={count + 2} />
     </>
 }
