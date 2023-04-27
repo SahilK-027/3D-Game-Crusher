@@ -205,27 +205,27 @@ export function BlockEnd({ positionProp = [0, 0, 0] }) {
                 />
             </RigidBody>
 
-            <RigidBody position={[0, 0.15, 0.7]}>
+            <RigidBody mass={0.02} position={[0, 0.15, 0.7]}>
                 <primitive object={pin1.scene} scale={3} />
             </RigidBody>
 
-            <RigidBody position={[0.3, 0.15, 0.2]}>
+            <RigidBody mass={0.02} position={[0.3, 0.15, 0.2]}>
                 <primitive object={pin2.scene} scale={3} />
             </RigidBody>
 
-            <RigidBody position={[-0.3, 0.15, 0.2]}>
+            <RigidBody mass={0.02} position={[-0.3, 0.15, 0.2]}>
                 <primitive object={pin3.scene} scale={3} />
             </RigidBody>
 
-            <RigidBody position={[-0.6, 0.15, -0.3]}>
+            <RigidBody mass={0.02} position={[-0.6, 0.15, -0.3]}>
                 <primitive object={pin4.scene} scale={3} />
             </RigidBody>
 
-            <RigidBody position={[0, 0.15, -0.3]}>
+            <RigidBody mass={0.02} position={[0, 0.15, -0.3]}>
                 <primitive object={pin5.scene} scale={3} />
             </RigidBody>
 
-            <RigidBody position={[0.6, 0.15, -0.3]}>
+            <RigidBody mass={0.02} position={[0.6, 0.15, -0.3]}>
                 <primitive object={pin6.scene} scale={3} />
             </RigidBody>
 
