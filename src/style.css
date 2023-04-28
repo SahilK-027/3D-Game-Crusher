@@ -9,3 +9,81 @@ body,
     height: 100%;
     background: ivory;
 }
+.interFace{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    font-family: 'Bebas Neue', cursive;
+}
+.time
+{
+    position: absolute;
+    top: 3.5%;
+    left: 0;
+    width: 100%;
+    color: #ffffff;
+    font-size: 6vh;
+    background: #00000033;
+    padding-top: 5px;
+    text-align: center;
+}
+.restart
+{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 100%;
+    color: #ffffff;
+    font-size: 80px;
+    background: #00000033;
+    padding-top: 10px;
+    pointer-events: auto;
+    cursor: pointer;
+}
+/**
+ * Controls
+ */
+ .controls
+ {
+     position: absolute;
+     bottom: 10%;
+     left: 0;
+     width: 100%;
+ }
+ 
+ .controls .raw
+ {
+     display: flex;
+     justify-content: center;
+ }
+ 
+ .controls .key
+ {
+     width: 40px;
+     height: 40px;
+     margin: 4px;
+     border: 2px solid #ffffff;
+     background: #ffffff44;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-size: 20px;
+     color: #fff;
+ }
+ 
+ .controls .key.large
+ {
+     width: 144px;
+ }
+ 
+ .controls .key.active
+ {
+     background: #ffffff99;
+     border: 2px solid #4e27bf;
+     color: #4e27bf;
+ }
