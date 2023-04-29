@@ -2,6 +2,8 @@ import { useRapier, RigidBody } from "@react-three/rapier"
 import { useFrame } from "@react-three/fiber"
 import { useKeyboardControls } from "@react-three/drei"
 import { useState, useEffect, useRef } from "react"
+import useGame from "./stores/useGame"
+
 import * as THREE from 'three'
 
 export default function Player() {
@@ -11,8 +13,16 @@ export default function Player() {
     const { rapier, world } = useRapier()
     const rapierWorld = world.raw();
 
-    const [ smoothedCameraPosition ] = useState(() => new THREE.Vector3(10, 10, 10))
-    const [ smoothedCameraTarget ] = useState(() => new THREE.Vector3())
+    const [smoothedCameraPosition] = useState(() => new THREE.Vector3(10, 10, 10))
+    const [smoothedCameraTarget] = useState(() => new THREE.Vector3())
+
+    /**
+     * Game mechanics
+     */
+    const start = useGame((state) => state.start);
+    const end = useGame((state) => state.end);
+    const restart = useGame((state) => state.restart);
+    const blocksCount = useGame((state) => state.blocksCount);
 
     const jump = () => {
         const origin = body.current.translation();
@@ -25,8 +35,24 @@ export default function Player() {
         }
     }
 
+    const reset = () =>{
+        body.current.setTranslation({ x: 0, y: 1, z: 0 })
+        body.current.setLinvel({ x: 0, y: 0, z: 0 })
+        body.current.setAngvel({ x: 0, y: 0, z: 0 })
+    }
+
     useEffect(() => {
-        const unsubscribeJump =  subscribeKeys(
+
+        const unsubscribeReset =  useGame.subscribe(
+            (state)=> state.phase,
+            (value)=>{
+                if(value === 'ready'){
+                    reset();
+                }
+            }
+        )
+
+        const unsubscribeJump = subscribeKeys(
             (state) => {
                 return state.jump
             },
@@ -36,9 +62,13 @@ export default function Player() {
                 }
             },
         )
-
-        return () =>{
+        const unsubscribeAny = subscribeKeys(() => {
+            start();
+        })
+        return () => {
             unsubscribeJump();
+            unsubscribeAny();
+            unsubscribeReset();
         }
     }, [])
 
@@ -91,6 +121,16 @@ export default function Player() {
 
         state.camera.position.copy(smoothedCameraPosition);
         state.camera.lookAt(smoothedCameraTarget);
+
+        /**
+         * Game phases
+         */
+        if (bodyPosition.z < - (blocksCount * 4 + 3)) {
+            end();
+        }
+        if (bodyPosition.y < -4) {
+            restart();
+        }
     })
     return <>
         <RigidBody

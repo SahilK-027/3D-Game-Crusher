@@ -1,8 +1,0 @@
-// Commit 1
-Duration: 52 mins 
-
-// Commit 2
-Duration: 1 hr 9 mins 
-
-// Commit 3
-Duration: 1 hr 20 mins 
