@@ -1,5 +1,8 @@
 # Crusher 3D 
 
+## Live
+- [live](crusher-3d.vercel.app)
+
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
 
